@@ -9,9 +9,20 @@ const UserSchema = new Schema({
     _id: ObjectId,
     FirstName: String,
     LastName: String,
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    email:  { type: String, required: true, unique: true },
+    username: { 
+        type: String, 
+        required: true, 
+        unique: true 
+    },
+    password: { 
+        type: String, 
+        required: true 
+    },
+    email:  { 
+        type: String, 
+        required: true, 
+        unique: true 
+    },
 })
 
 const ContentSchema = new Schema({
@@ -31,13 +42,28 @@ const ContentSchema = new Schema({
     userId: { 
         type: Types.ObjectId, 
         ref: 'User', 
-        required: true },
-})
+        required: true,
+    },
+});
 
 const TagSchema = new Schema({
     _id: ObjectId,
-    title:  { type: String, required: true, unique: true },
+    title:  { 
+        type: String, 
+        required: true, 
+        unique: true 
+    },
 })
 
-const Tag = mongoose.model('Tag', TagSchema);
-const User = mongoose.model('User', UserSchema);
+const LinkSchema = new Schema({
+    hash:  { 
+        type: String, 
+        required: true 
+    },
+    userId:  { type: Types.ObjectId, ref: 'User', required: true },
+})
+
+export const Tag = mongoose.model('Tag', TagSchema);
+export const User = mongoose.model('User', UserSchema);
+export const Content = mongoose.model('Content', ContentSchema);
+export const Link = mongoose.model('Link', LinkSchema);

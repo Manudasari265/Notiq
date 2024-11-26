@@ -9,6 +9,7 @@ export const UserRequiredZod = z.object({
         .max(100, {message: "Password must be no more than 100 characters long"}),
     email: z.string()
         .email({message: "Invalid email format"}),
+    salt: z.string()
 });
 
 export type UserRequiredType = z.infer<typeof UserRequiredZod>;

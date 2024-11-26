@@ -1,14 +1,14 @@
-import express, { Express, Request, Response, Application } from 'express';
+import express, { Request, Response, Application } from 'express';
 import { UserRequiredType, UserRequiredZod } from './validations/UserSchema';
 import { ResponseErrors, ResponseErrorCode } from './types/ResponseStatus/ResponseErrors.types';
 import { ResponseSuccess, ResponseSuccessCode } from './types/ResponseStatus/ResponseSuccess.types';
 import { ResponseServer, ResponseServerCode } from './types/ResponseStatus/ResponseServer.types';
 import cors from 'cors';
-import bcrypt from 'bcrypt';
+import bcrypt, { genSalt } from 'bcrypt';
 import mongoose from 'mongoose';
 import { UserModel } from './config/db';
 
-const app = express();
+const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
@@ -18,9 +18,9 @@ app.post("/api/v1/signup", async (req: Request, res: Response) => {
     const parsedBody = UserRequiredZod.safeParse(req.body);
 
     if (!parsedBody.success) {
-        res.status(400).json({ //& 400
+        res.status(ResponseErrors.INPUT_ERRORS).json({
             message: "Incorrect format",
-            errors: parsedBody.error.errors, // Detailed validation errors
+            errors: parsedBody.error.errors,
         });
         return;
     }
@@ -36,25 +36,38 @@ app.post("/api/v1/signup", async (req: Request, res: Response) => {
             email: userData.email,
         });
 
-        res.status(201).json({
+        res.status(ResponseSuccess.ACCEPTED).json({
             message: "User signed up successfully",
         });
     } catch(e: any) {
-        if(e.code === 11000) {
-            res.status(409).json({
+        if(e.code === ResponseErrors.DB_DUPLICATE_KEY) {
+            res.status(ResponseErrors.FORBIDDEN).json({
                 message: "User already exists",
             });
             return
         }
-        console.error(e);
-        res.status(500).json({
+        res.status(ResponseServer.INTERNAL_SERVER_ERROR).json({
             message: "Internal server error",
         })
     }
 });
 
-app.post("/api/v1/signin", function(req: Request, res: Response) {
+app.post("/api/v1/signin", async function(req: Request, res: Response) {
+    const { username } = req.body;
+    const { password } = req.body;
 
+    const existingUser = await UserModel.find({
+        username,
+    })
+    console.log(existingUser);
+    if(existingUser) {
+        // const hash = existingUser.password;
+        // const passwordMatch = bcrypt.compare(password, hash);
+
+        // if(passwordMatch) {
+
+        // }
+    }
 });
 
 app.post("/api/v1/content", function(req: Request, res: Response) {

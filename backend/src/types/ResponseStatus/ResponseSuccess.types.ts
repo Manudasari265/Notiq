@@ -1,7 +1,7 @@
-export type ResponseSuccess = {
-    200: 'Success',
-    201: 'Fulfilled',
-    202: 'Accepted'
-    204: 'No Content',
-    206: 'Partial Content',
+export const ResponseSuccess = {
+    SUCCESS: 200,
+    ACCEPTED: 202,
+    NO_CONTENT: 204,
 }
+
+export type ResponseSuccessCode = typeof ResponseSuccess[keyof typeof ResponseSuccess];

@@ -6,9 +6,9 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const CONTENT_TYPES = ['image', 'video', 'article', 'audio'];
 
-const UserSchema: Schema<IUser> = new Schema({
-    FirstName: String,
-    LastName: String,
+mongoose.connect("mongodb+srv://manojdasari:misXSnFK99aV4XY4@cluster0.jdxax.mongodb.net/notiqDb");
+
+export const UserSchema: Schema<IUser> = new Schema({
     username: { 
         type: String, 
         required: true, 
@@ -25,7 +25,7 @@ const UserSchema: Schema<IUser> = new Schema({
     },
 })
 
-const ContentSchema: Schema<IContent> = new Schema({
+export const ContentSchema: Schema<IContent> = new Schema({
     link: { type: String, required: true },
     type:  { 
         type: String, 
@@ -44,7 +44,7 @@ const ContentSchema: Schema<IContent> = new Schema({
     },
 });
 
-const TagSchema: Schema<ITag> = new Schema({
+export const TagSchema: Schema<ITag> = new Schema({
     // _id: ObjectId,
     title:  { 
         type: String, 
@@ -53,7 +53,7 @@ const TagSchema: Schema<ITag> = new Schema({
     },
 })
 
-const LinkSchema: Schema<ILink> = new Schema({
+export const LinkSchema: Schema<ILink> = new Schema({
     hash:  { 
         type: String, 
         required: true, 
@@ -65,7 +65,7 @@ const LinkSchema: Schema<ILink> = new Schema({
     },
 })
 
-export const TagModel = mongoose.model<ITag>('Tag', TagSchema);
-export const UserModel = mongoose.model<IUser>('User', UserSchema);
-export const ContentModel = mongoose.model<IContent>('Content', ContentSchema);
-export const LinkModel = mongoose.model<ILink>('Links', LinkSchema);
+export const TagModel = mongoose.model<ITag>("Tag", TagSchema);
+export const UserModel = mongoose.model<IUser>("User", UserSchema);
+export const ContentModel = mongoose.model<IContent>("Content", ContentSchema);
+export const LinkModel = mongoose.model<ILink>("Links", LinkSchema);

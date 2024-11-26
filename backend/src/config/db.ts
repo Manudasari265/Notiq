@@ -1,12 +1,12 @@
-import mongoose, { Types } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
+import { ITag, IUser, IContent, ILink } from "../types/ModelTypes/ModelTypes";
 
-const Schema = mongoose.Schema;
+// const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
-const ContentTypes = ['image', 'video', 'article', 'audio'];
+const CONTENT_TYPES = ['image', 'video', 'article', 'audio'];
 
-const UserSchema = new Schema({
-    _id: ObjectId,
+const UserSchema: Schema<IUser> = new Schema({
     FirstName: String,
     LastName: String,
     username: { 
@@ -25,29 +25,27 @@ const UserSchema = new Schema({
     },
 })
 
-const ContentSchema = new Schema({
-    _id: ObjectId,
-    link: String,
+const ContentSchema: Schema<IContent> = new Schema({
+    link: { type: String, required: true },
     type:  { 
         type: String, 
-        enum: ContentTypes, 
+        enum: CONTENT_TYPES, 
         required: true, 
-        unique: true 
     },
     title: String,
-    tags: { 
-        type: Types.ObjectId, 
+    tags: [{ 
+        type: Schema.Types.ObjectId, 
         ref: 'Tag' 
-    },
+    }],
     userId: { 
-        type: Types.ObjectId, 
+        type: Schema.Types.ObjectId, 
         ref: 'User', 
         required: true,
     },
 });
 
-const TagSchema = new Schema({
-    _id: ObjectId,
+const TagSchema: Schema<ITag> = new Schema({
+    // _id: ObjectId,
     title:  { 
         type: String, 
         required: true, 
@@ -55,15 +53,19 @@ const TagSchema = new Schema({
     },
 })
 
-const LinkSchema = new Schema({
+const LinkSchema: Schema<ILink> = new Schema({
     hash:  { 
         type: String, 
+        required: true, 
+    },
+    userId:  { 
+        type: Schema.Types.ObjectId, 
+        ref: 'User', 
         required: true 
     },
-    userId:  { type: Types.ObjectId, ref: 'User', required: true },
 })
 
-export const Tag = mongoose.model('Tag', TagSchema);
-export const User = mongoose.model('User', UserSchema);
-export const Content = mongoose.model('Content', ContentSchema);
-export const Link = mongoose.model('Link', LinkSchema);
+export const TagModel = mongoose.model<ITag>('Tag', TagSchema);
+export const UserModel = mongoose.model<IUser>('User', UserSchema);
+export const ContentModel = mongoose.model<IContent>('Content', ContentSchema);
+export const LinkModel = mongoose.model<ILink>('Links', LinkSchema);

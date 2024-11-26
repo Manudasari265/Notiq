@@ -4,7 +4,7 @@ import { ResponseErrors, ResponseErrorCode } from './types/ResponseStatus/Respon
 import { ResponseSuccess, ResponseSuccessCode } from './types/ResponseStatus/ResponseSuccess.types';
 import { ResponseServer, ResponseServerCode } from './types/ResponseStatus/ResponseServer.types';
 import cors from 'cors';
-import bcrypt, { genSalt } from 'bcrypt';
+import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { UserModel } from './config/db';
 
@@ -59,7 +59,7 @@ app.post("/api/v1/signin", async function(req: Request, res: Response) {
     const existingUser = await UserModel.find({
         username,
     })
-    console.log(existingUser);
+    // console.log(existingUser);
     if(existingUser) {
         // const hash = existingUser.password;
         // const passwordMatch = bcrypt.compare(password, hash);

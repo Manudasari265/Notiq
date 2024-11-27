@@ -57,17 +57,47 @@ app.post("/api/v1/signin", async function(req: Request, res: Response) {
     const { username } = req.body;
     const { password } = req.body;
 
-    const existingUser = await UserModel.find({
-        username,
-    })
-    // console.log(existingUser);
-    if(existingUser) {
-        // const hash = existingUser.password;
-        // const passwordMatch = bcrypt.compare(password, hash);
+    if(!username || !password) {
+        res.status(ResponseErrors.BAD_REQUEST).json({
+            message: "Username and password are required."
+        });
+        return;
+    }
 
-        // if(passwordMatch) {
+    try {
+        const existingUser = await UserModel.findOne({
+            username,
+        });
+    
+        if(!existingUser) {
+            res.status(ResponseErrors.NOT_FOUND).json({
+                message: "User not found",
+            });
+            return;
+        }
+        
+        const hashPasswordFromDb = existingUser.password;
+        const passwordMatch = await bcrypt.compare(password, hashPasswordFromDb);
 
-        // }
+        if(passwordMatch) {
+            const token = jwt.sign({
+                id: existingUser._id
+            }, JWT_SECRET);
+
+            res.json({
+                token,
+            })
+            return;
+        } else {
+            res.status(ResponseErrors.UNAUTHORIZED).json({
+                message: "Incorrect credentials",
+            })
+            return;
+        }
+    } catch (error) {
+        res.status(ResponseServer.INTERNAL_SERVER_ERROR).json({
+            message: "An unexpected error occurred.",
+        })
     }
 });
 

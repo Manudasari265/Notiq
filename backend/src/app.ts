@@ -7,12 +7,13 @@ import cors from 'cors';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { UserModel } from './config/db';
+import jwt from 'jsonwebtoken';
 
 const app: Application = express();
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
 app.use(express.json());
 app.use(cors());
-
-mongoose.connect("mongodb+srv://manojdasari:misXSnFK99aV4XY4@cluster0.jdxax.mongodb.net/notiqDb");
 
 app.post("/api/v1/signup", async (req: Request, res: Response) => {
     const parsedBody = UserRequiredZod.safeParse(req.body);
@@ -90,16 +91,4 @@ app.get("/api/v1/brain/:shareLink", function(req: Request, res: Response) {
 
 });
 
-async function main() {
-    try {
-            const mongooseDb = await mongoose.connect("mongodb+srv://manojdasari:misXSnFK99aV4XY4@cluster0.jdxax.mongodb.net/notiqDb");
-            console.log("database is connected");
-            await app.listen(process.env.PORT || 3000, () => {
-            console.log(`Server started listening on port: ${3000}`)
-        })
-    } catch (error) {
-        console.log(`Application failed to start the server`);
-    }
-}
-
-main()
+export default app;

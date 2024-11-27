@@ -1,12 +1,15 @@
 import mongoose, { Schema, Types } from "mongoose";
 import { ITag, IUser, IContent, ILink } from "../types/ModelTypes/ModelTypes";
+import dotenv from 'dotenv';
 
-// const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
 const CONTENT_TYPES = ['image', 'video', 'article', 'audio'];
 
-mongoose.connect("mongodb+srv://manojdasari:misXSnFK99aV4XY4@cluster0.jdxax.mongodb.net/notiqDb");
+const dbUrl = process.env.DATABASE_URL;
+
+dotenv.config();
+mongoose.connect(dbUrl as string);
 
 export const UserSchema: Schema<IUser> = new Schema({
     username: { 

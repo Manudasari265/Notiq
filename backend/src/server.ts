@@ -1,16 +1,26 @@
-// import mongoose from 'mongoose';
-// import app from './app';
+import mongoose from 'mongoose';
+import app from './app';
+import dotenv from 'dotenv';
 
-// async function main() {
-//     try {
-//             const mongooseDb = await mongoose.connect("mongodb+srv://manojdasari:misXSnFK99aV4XY4@cluster0.jdxax.mongodb.net/notiqDb");
-//             console.log("database is connected");
-//             await app.listen(process.env.PORT || 3000, () => {
-//             console.log(`Server started listening on port: ${3000}`)
-//         })
-//     } catch (error) {
-//         console.log(`Application failed to start the server`);
-//     }
-// }
+dotenv.config();
 
-// main()
+const dbUrl = process.env.DATABASE_URL;
+const PORT = process.env.PORT;
+
+async function main() {
+    try {
+            if(!dbUrl) {
+                console.log("DATABASE_URL is not defined in the environment variables");
+                process.exit(1);
+            }
+            await mongoose.connect(dbUrl as string);
+            console.log("database is connected");
+            app.listen(PORT, () => {
+            console.log(`Server started listening on port: ${PORT}`)
+        })
+    } catch (error) {
+        console.log(`Application failed to start the server`);
+    }
+}
+
+main()
